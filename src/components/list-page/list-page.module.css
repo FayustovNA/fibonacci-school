@@ -1,0 +1,31 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 990px;
+    justify-content: center;
+    margin: auto;
+    padding: 0;
+}
+
+.forminputvalue {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 12px;
+}
+
+.forminputindex {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 12px;
+}
+
+.button_max {
+    min-width: 372px;
+}
+
+.button {
+    min-width: 180px;
+}
