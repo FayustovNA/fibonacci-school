@@ -29,3 +29,23 @@
 .button {
     min-width: 180px;
 }
+
+.line {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    margin: 90px auto auto auto;
+}
+
+.lineitem {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+.circle {
+    padding: 0 15px;
+}
