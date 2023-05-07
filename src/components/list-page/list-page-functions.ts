@@ -33,6 +33,10 @@ export class LinkedList<T> implements IStack<T> {
         }
     }
 
+    getSize() {
+        return this.size;
+    }
+
     getHead() {
         if (this.top === null) {
             return null;
@@ -168,15 +172,17 @@ export class LinkedList<T> implements IStack<T> {
         return false
     }
 
-    findElement(item: any) {
+    findElement(index: number) {
         if (!this.top) {
             return null;
         }
         let currentNode: any = this.top;
+        let counter = 0;
         while (currentNode) {
-            if (currentNode.value === item) {
+            if (counter === index) {
                 return currentNode
             }
+            counter++;
             currentNode = currentNode.next;
         }
         return null
