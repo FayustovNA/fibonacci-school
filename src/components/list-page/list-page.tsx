@@ -8,12 +8,15 @@ import { Input } from "../ui/input/input";
 import { Circle } from "../ui/circle/circle";
 import { Button } from "../ui/button/button";
 import { linkedList, Node } from "./list-page-functions";
+import { waitTime } from "../../utils/wait-function";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { valueToNode } from "@babel/types";
 
+const MAX_LENGTH_INPUT_VALUE = 4;
 
 export const ListPage: React.FC = () => {
 
-  const [list, setList] = useState<Node<string>[]>(linkedList.toArray());
-  console.log(list)
+  const [list, setList] = useState<Node<any>[]>(linkedList.toArray());
   const [inputValue, setInputValue] = useState({
     value: '',
     index: '',
@@ -29,15 +32,14 @@ export const ListPage: React.FC = () => {
     isLock: false,
   });
 
+  //Cтейты анимации удаления и добавления элементов
   const [isActive, setIsActive] = useState<any>(null);
+  const [isActiveDelete, setIsActiveDelete] = useState<any>(null);
   const [isActiveTail, setIsActiveTail] = useState<any>(null);
+  const [isActiveTailDelete, setIsActiveTailDelete] = useState<any>(null);
   const [isActiveIndex, setIsActiveIndex] = useState<any>(null);
+  const [isActiveIndexDelete, setIsActiveIndexDelete] = useState<any>(null);
   const [circleValue, setCircleValue] = useState<any>(null);
-
-  //Время анимации
-  function setTime() {
-    return new Promise<void>((res) => setTimeout(res, 500));
-  }
 
   //Сбор данных из формы
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -48,14 +50,17 @@ export const ListPage: React.FC = () => {
   //Добавить в начало
   const addHead = async () => {
     setLoader({ ...loader, pushHead: true, isLock: true })
-    setIsActive(0)
-    setCircleValue(inputValue.value)
-    // addSmallCircleTop(0)
-    await setTime();
-    linkedList.pushHead(inputValue.value)
-    setIsActive(null)
+    setIsActive(0);
+    setCircleValue(inputValue.value);
+    linkedList.pushHead(inputValue.value);
+    await waitTime(SHORT_DELAY_IN_MS);
+    setIsActive(null);
+    let list = linkedList.toArray()
+    setList(list)
+    list[0].state = ElementStates.Modified;
     setList([...linkedList.toArray()])
-    console.log(list)
+    await waitTime(SHORT_DELAY_IN_MS);
+    list[0].state = ElementStates.Default;
     setInputValue({ value: "", index: "" });
     setLoader({ ...loader, pushHead: false, isLock: false });
   }
@@ -65,23 +70,29 @@ export const ListPage: React.FC = () => {
     setLoader({ ...loader, pushTail: true, isLock: true });
     setIsActiveTail(linkedList.getSize() - 1)
     setCircleValue(inputValue.value)
-    // addSmallCircleTail(linkedList.getSize() - 1)
-    await setTime();
+    await waitTime(SHORT_DELAY_IN_MS);
     linkedList.pushTail(inputValue.value)
     setIsActiveTail(null)
+    let list = linkedList.toArray()
+    setList(list)
     setList([...linkedList.toArray()])
+    list[linkedList.getSize() - 1].state = ElementStates.Modified;
+    setList([...linkedList.toArray()])
+    await waitTime(SHORT_DELAY_IN_MS);
+    list[linkedList.getSize() - 1].state = ElementStates.Default;
     setInputValue({ value: "", index: "" });
     setLoader({ ...loader, pushTail: false, isLock: false });
   }
 
-  //Удалить из начала
+  //Удалить из началаs
   const deleteHead = async () => {
     setLoader({ ...loader, deleteHead: true, isLock: true });
-    setIsActive(0)
+    setIsActiveDelete(0)
     setCircleValue(linkedList.getHead()!.value)
-    await setTime();
+    linkedList.getHead()!.value = '';
+    await waitTime(SHORT_DELAY_IN_MS);
     linkedList.deleteHead()
-    setIsActive(null)
+    setIsActiveDelete(null)
     setList([...linkedList.toArray()])
     setLoader({ ...loader, deleteHead: false, isLock: false });
   }
@@ -89,45 +100,86 @@ export const ListPage: React.FC = () => {
   //Удалить из конца
   const deleteTail = async () => {
     setLoader({ ...loader, deleteTail: true, isLock: true });
-    setIsActiveTail(linkedList.getSize() - 1)
+    setIsActiveTailDelete(linkedList.getSize() - 1)
     setCircleValue(linkedList.getTail()!.value)
-    await setTime();
+    linkedList.getTail()!.value = '';
+    await waitTime(SHORT_DELAY_IN_MS);
     linkedList.deleteTail()
-    setIsActiveTail(null)
+    setIsActiveTailDelete(null)
     setList([...linkedList.toArray()])
     setLoader({ ...loader, deleteTail: false, isLock: false });
   }
 
   //Добавить по индексу
   const addByIndex = async () => {
-    setLoader({ ...loader, pushIndex: true });
-    setIsActiveIndex(Number(inputValue.index));
+    setLoader({ ...loader, pushIndex: true, isLock: true });
     setCircleValue(inputValue.value)
-    await setTime();
+
+    for (let i = 0; i <= Number(inputValue.index); i++) {
+      setIsActiveIndex(i);
+      list[i].state = ElementStates.Changing
+      setList([...linkedList.toArray()])
+      await waitTime(SHORT_DELAY_IN_MS);
+    }
+
     linkedList.pushByIndex(Number(inputValue.index), inputValue.value)
+    await waitTime(SHORT_DELAY_IN_MS);
     setIsActiveIndex(null)
+
+    setList(linkedList.toArray())
+    let newList = linkedList.toArray();
+
+    setList(newList); // сетит полный лист
+    setList(linkedList.toArray()) // сетит старый лист!!!
+
+    //Не могу понять почему не сетит новый лист, поэтому не правильно вешается modified на элемент по активному индексу
+    console.log(newList)
+    console.log(list)
+
+    list.forEach((item) => { item.state = ElementStates.Default })
+    setList([...linkedList.toArray()]);
+    await waitTime(SHORT_DELAY_IN_MS);
+
+    list[Number(inputValue.index)].state = ElementStates.Modified;
     setList([...linkedList.toArray()])
+
+    await waitTime(SHORT_DELAY_IN_MS);
+    list[Number(inputValue.index)].state = ElementStates.Default
+    setList([...linkedList.toArray()])
+
     setInputValue({ value: "", index: "" });
-    setLoader({ ...loader, pushIndex: false });
+    setLoader({ ...loader, pushIndex: false, isLock: false });
   }
+
 
   //Удалить по индексу
   const deleteByIndex = async () => {
-    setLoader({ ...loader, deleteIndex: true });
-    setIsActiveIndex(Number(inputValue.index));
+    setLoader({ ...loader, deleteIndex: true, isLock: true });
     let currentValue = linkedList.findElement(Number(inputValue.index))
     setCircleValue(currentValue.value)
-    await setTime();
+
+    for (let i = 0; i <= Number(inputValue.index); i++) {
+      list[i].state = ElementStates.Changing
+      setList([...linkedList.toArray()])
+      await waitTime(SHORT_DELAY_IN_MS);
+    }
+
+    linkedList.findElement(Number(inputValue.index))!.value = '';
+    setIsActiveIndexDelete(Number(inputValue.index));
+
+    await waitTime(SHORT_DELAY_IN_MS);
     linkedList.deleteByIndex(Number(inputValue.index))
-    setIsActiveIndex(null)
+    setIsActiveIndexDelete(null)
+    list.forEach((item) => { item.state = ElementStates.Default })
+
     setList([...linkedList.toArray()])
     setInputValue({ value: "", index: "" });
-    setLoader({ ...loader, deleteIndex: false });
+    setLoader({ ...loader, deleteIndex: false, isLock: false });
   }
 
-  //Отображение isSmall / head / tail
+  //Отображение isSmall над и под элементом
   const addSmallCircleTop = (index: number) => {
-    if (isActive === index || isActiveIndex === index) {
+    if (isActive === index || isActiveIndex === index || isActiveTail === index) {
       return (
         <Circle isSmall letter={circleValue} state={ElementStates.Changing} />
       );
@@ -138,8 +190,8 @@ export const ListPage: React.FC = () => {
     }
   };
 
-  const addSmallCircleTail = (index: number) => {
-    if (isActiveTail === index) {
+  const addSmallCircleBottom = (index: number) => {
+    if (isActiveDelete === index || isActiveTailDelete === index || isActiveIndexDelete === index) {
       return (
         <Circle isSmall letter={circleValue} state={ElementStates.Changing} />
       );
@@ -150,12 +202,13 @@ export const ListPage: React.FC = () => {
     }
   };
 
+
   return (
     <SolutionLayout title="Связный список">
       <div className={style.form}>
         <div className={style.forminputvalue}>
           <Input
-            maxLength={4}
+            maxLength={MAX_LENGTH_INPUT_VALUE}
             isLimitText
             name='value'
             value={inputValue.value}
@@ -240,9 +293,10 @@ export const ListPage: React.FC = () => {
               letter={item.value}
               index={index}
               extraClass={style.circle}
-              tail={addSmallCircleTail(index)}
+              tail={addSmallCircleBottom(index)}
               head={addSmallCircleTop(index)}
-              state={isActive && isActiveTail === index ? ElementStates.Changing : ElementStates.Default}
+              // state={isActive && isActiveTail === index ? ElementStates.Changing : ElementStates.Default}
+              state={item.state}
             />
             {index !== list.length - 1 && <ArrowIcon />}
           </div>

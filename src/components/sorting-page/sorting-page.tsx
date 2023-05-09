@@ -10,6 +10,8 @@ import { Direction } from "../../types/direction";
 import { randomArr } from "./sorting-page-functions";
 import { bubbleSortUp, selectionSortUp, selectionSortDown, bubbleSortDown } from "./sorting-page-functions";
 import { ArrayTypes } from "./sorting-page-functions";
+import { waitTime } from "../../utils/wait-function";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 
 export const SortingPage: React.FC = () => {
@@ -22,11 +24,6 @@ export const SortingPage: React.FC = () => {
     new: false
   });
 
-  //Время анимации
-  function setTime() {
-    return new Promise<void>((res) => setTimeout(res, 500));
-  }
-
   //Сбор данных из формы
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement
@@ -36,10 +33,9 @@ export const SortingPage: React.FC = () => {
   //Получение новго массива
   const setNewArray = async () => {
     setLoader({ ...loader, new: true });
-    await setTime();
+    await waitTime(SHORT_DELAY_IN_MS);
     newArray((randomArr()))
     setLoader({ ...loader, new: false });
-    console.log(array)
   }
 
   //Выбор направление сортировки
@@ -54,19 +50,14 @@ export const SortingPage: React.FC = () => {
   //Сортировка выбор
   const sortSelection = async (arr: ArrayTypes[], direction: any) => {
     if (direction === Direction.Ascending) {
-      // setLoader({ ...loader, up: true, down: false, new: false });
-      console.log(loader.up)
       selectionSortUp(array, newArray, loader.up, setLoader)
-      // setLoader({ ...loader, up: false, down: false, new: false });
     } else { selectionSortDown(array, newArray, loader.down, setLoader) }
   }
 
   //Сортировка пузырек
   const sortBubble = async (arr: ArrayTypes[], direction: any) => {
     if (direction === Direction.Ascending) {
-      setLoader({ ...loader, up: false, down: true, new: false });
       bubbleSortUp(array, newArray, loader.up, setLoader)
-      setLoader({ ...loader, up: false, down: false, new: false });
     } else { bubbleSortDown(array, newArray, loader.down, setLoader) }
   }
 
@@ -77,7 +68,7 @@ export const SortingPage: React.FC = () => {
           <RadioInput
             label={'Выбор'}
             name={'selection'}
-            checked={radio == 'selection' ? true : false}
+            checked={radio === 'selection' ? true : false}
             onChange={onChange}
             value={'selection'}
             disabled={loader.up === true || loader.down === true || loader.new === true}
@@ -87,7 +78,7 @@ export const SortingPage: React.FC = () => {
             name={'bubble'}
             onChange={onChange}
             value={'bubble'}
-            checked={radio == 'bubble' ? true : false}
+            checked={radio === 'bubble' ? true : false}
             disabled={loader.up === true || loader.down === true || loader.new === true}
           />
         </div>
@@ -99,7 +90,7 @@ export const SortingPage: React.FC = () => {
             sorting={Direction.Ascending}
             isLoader={loader.up}
             onClick={() => directionSort(Direction.Ascending)}
-            disabled={loader.up === true || loader.down === true || loader.new === true}
+            disabled={loader.down === true || loader.new === true}
           />
           <Button
             text={'По убыванию'}
@@ -108,7 +99,7 @@ export const SortingPage: React.FC = () => {
             sorting={Direction.Descending}
             onClick={() => directionSort(Direction.Descending)}
             isLoader={loader.down}
-            disabled={loader.up === true || loader.down === true || loader.new === true}
+            disabled={loader.up === true || loader.new === true}
           />
         </div>
         <Button
@@ -117,7 +108,7 @@ export const SortingPage: React.FC = () => {
           type={'submit'}
           onClick={setNewArray}
           isLoader={loader.new}
-          disabled={loader.up == true || loader.down == true}
+          disabled={loader.up === true || loader.down === true}
         />
       </div>
       <ul className={style.array}>

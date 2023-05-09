@@ -16,12 +16,8 @@ export class Stack<T> implements IStack<T> {
     }
 
     push = (item: T) => {
-        // if (this.length >= this.size) {
-        //     throw new Error("Maximum length exceeded");
-        // }
         this.container.push(item);
         this.top++;
-        console.log(this.top)
         this.length++;
     };
 

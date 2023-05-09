@@ -7,11 +7,14 @@ import { Input } from "../ui/input/input";
 import { Circle } from "../ui/circle/circle";
 import { Button } from "../ui/button/button";
 import { queue } from "./queue-functions";
+import { waitTime } from "../../utils/wait-function";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+
+const MAX_LENGTH_INPUT_VALUE = 4;
 
 export const QueuePage: React.FC = () => {
 
   queue.getElements();
-
 
   //Стейты
   const [inputValue, setInputValue] = useState('');
@@ -22,14 +25,6 @@ export const QueuePage: React.FC = () => {
   });
   const [queues, setQueues] = useState<any>();
   const [isActive, setIsActive] = useState<any>(null);
-  // const [tail, setTail] = useState();
-  // const [head, setHead] = useState();
-
-
-  //Время анимации
-  function setTime() {
-    return new Promise<void>((res) => setTimeout(res, 500));
-  }
 
   //Сбор данных из формы
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,28 +37,28 @@ export const QueuePage: React.FC = () => {
     setLoader({ ...loader, enqueue: true })
     setIsActive(queue.getTail());
     queue.enqueue(inputValue);
-    await setTime()
+    await waitTime(SHORT_DELAY_IN_MS);
     setQueues([...queue.getElements()])
     setInputValue("");
+    setIsActive('false')
     setLoader({ ...loader, enqueue: false })
-    console.log(queue.getHead())
-    console.log(queue.getTail())
   }
 
   //Удаление из очереди
   const deQueue = async () => {
     setLoader({ ...loader, dequeue: true })
     setIsActive(queue.getHead());
-    await setTime()
+    await waitTime(SHORT_DELAY_IN_MS);
     queue.dequeue();
     setQueues([...queue.getElements()])
+    setIsActive('false')
     setLoader({ ...loader, dequeue: false })
   }
 
   //Очистить все
   const resetQueue = async () => {
     setLoader({ ...loader, reset: true })
-    await setTime()
+    await waitTime(SHORT_DELAY_IN_MS);
     queue.cleanQueue();
     setQueues([...queue.getElements()])
     setInputValue("");
@@ -76,25 +71,26 @@ export const QueuePage: React.FC = () => {
       <div className={style.form}>
         <div className={style.forminput}>
           <Input
-            maxLength={4}
+            maxLength={MAX_LENGTH_INPUT_VALUE}
             isLimitText
             value={inputValue}
             onChange={onChange}
             placeholder="Введите значение"
+            disabled={loader.enqueue || loader.dequeue || loader.reset}
           />
           <Button
             text={'Добавить'}
             type={'button'}
             isLoader={loader.enqueue}
             onClick={enQueue}
-            disabled={!inputValue}
+            disabled={!inputValue || loader.dequeue || loader.reset}
           />
           <Button
             text={'Удалить'}
             type={'button'}
             isLoader={loader.dequeue}
             onClick={deQueue}
-            disabled={queue.isEmpty()}
+            disabled={queue.isEmpty() || loader.enqueue || loader.reset}
           />
         </div>
 
@@ -103,7 +99,7 @@ export const QueuePage: React.FC = () => {
           type={'reset'}
           isLoader={loader.reset}
           onClick={resetQueue}
-          disabled={queue.isEmpty()}
+          disabled={queue.isEmpty() || loader.enqueue || loader.dequeue}
         />
       </div>
       <ul className={style.line}>

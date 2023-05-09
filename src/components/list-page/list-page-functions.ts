@@ -10,6 +10,7 @@ interface IStack<T> {
 
 export class Node<T> {
     value: T;
+    state: any;
     next: Node<T> | null;
     constructor(value: T, next?: Node<T> | null) {
         this.value = value;
@@ -29,7 +30,6 @@ export class LinkedList<T> implements IStack<T> {
         this.size = 0;
         for (let item of startList) {
             this.pushHead(item);
-            console.log(this.size)
         }
     }
 
@@ -64,6 +64,7 @@ export class LinkedList<T> implements IStack<T> {
         this.size++;
         return this;
     };
+
 
     pushTail = (item: T): any => {
         const newNode = new Node(item);
@@ -116,7 +117,6 @@ export class LinkedList<T> implements IStack<T> {
         previousItem.next = null;
         this.tail = previousItem;
         this.size--;
-        console.log(this.size)
         return this
     };
 
@@ -130,7 +130,6 @@ export class LinkedList<T> implements IStack<T> {
             if (index === 0) {
                 node.next = this.top;
                 this.top = node;
-                console.log(node)
             } else {
                 let curr = this.top;
                 let currIndex = 0;

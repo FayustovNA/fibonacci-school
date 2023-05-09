@@ -50,9 +50,16 @@
     padding: 0 10px;
 }
 
-/* 
-.smallUp {
+/* .circle_add_top {
+    padding: 0;
     position: absolute;
-    left: 20%;
-    top: -65px;
+    left: 28px;
+    top: -64px;
+}
+
+.circle_delete_bottom {
+    padding: 0;
+    position: absolute;
+    left: 28px;
+    bottom: -94px;
 } */

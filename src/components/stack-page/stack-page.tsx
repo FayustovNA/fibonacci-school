@@ -7,8 +7,10 @@ import { Input } from "../ui/input/input";
 import { Circle } from "../ui/circle/circle";
 import { Button } from "../ui/button/button";
 import { stacks } from "./stack-functions";
+import { waitTime } from "../../utils/wait-function";
+import { DELAY_IN_MS } from "../../constants/delays";
 
-
+const MAX_LENGTH_INPUT_VALUE = 4;
 
 export const StackPage: React.FC = () => {
 
@@ -22,11 +24,6 @@ export const StackPage: React.FC = () => {
   const [stack, setStack] = useState<Array<any>>();
   const [isActive, setIsActive] = useState<any>(null);
 
-  //Время анимации
-  function setTime() {
-    return new Promise<void>((res) => setTimeout(res, 1000));
-  }
-
   //Сбор данных из формы
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement
@@ -38,10 +35,10 @@ export const StackPage: React.FC = () => {
     setLoader({ ...loader, push: true })
     setIsActive(stacks.getTop());
     stacks.push(inputValue);
-    await setTime()
+    await waitTime(DELAY_IN_MS);
     setStack([...stacks.getElements()])
     setInputValue("");
-    await setTime()
+    await waitTime(DELAY_IN_MS);
     setLoader({ ...loader, push: false })
     setIsActive('false');
   }
@@ -50,10 +47,10 @@ export const StackPage: React.FC = () => {
   const popStack = async () => {
     setLoader({ ...loader, delete: true })
     setIsActive(stacks.getTop());
-    await setTime();
+    await waitTime(DELAY_IN_MS);
     stacks.pop();
     setStack([...stacks.getElements()])
-    await setTime();
+    await waitTime(DELAY_IN_MS);
     setLoader({ ...loader, delete: false })
     setIsActive('false');
   }
@@ -61,7 +58,7 @@ export const StackPage: React.FC = () => {
   //Очистить стек
   const cleanStack = async () => {
     setLoader({ ...loader, reset: true })
-    await setTime()
+    await waitTime(DELAY_IN_MS);
     stacks.cleanStack();
     setStack([...stacks.getElements()])
     setInputValue("");
@@ -74,17 +71,18 @@ export const StackPage: React.FC = () => {
       <div className={style.form}>
         <div className={style.forminput}>
           <Input
-            maxLength={4}
+            maxLength={MAX_LENGTH_INPUT_VALUE}
             isLimitText
             value={inputValue}
             onChange={onChange}
+            disabled={loader.delete || loader.push || loader.reset}
           />
           <Button
             text={'Добавить'}
             type={'submit'}
             isLoader={loader.push}
             onClick={pushStack}
-            disabled={!inputValue}
+            disabled={!inputValue || loader.delete || loader.reset}
 
           />
           <Button
@@ -92,7 +90,7 @@ export const StackPage: React.FC = () => {
             type={'button'}
             isLoader={loader.delete}
             onClick={popStack}
-            disabled={stacks.isEmpty()}
+            disabled={stacks.isEmpty() || loader.push || loader.reset}
           />
         </div>
 
@@ -101,7 +99,7 @@ export const StackPage: React.FC = () => {
           type={'reset'}
           isLoader={loader.reset}
           onClick={cleanStack}
-          disabled={stacks.isEmpty()}
+          disabled={stacks.isEmpty() || loader.push || loader.delete}
         />
       </div>
       <ul className={style.line}>

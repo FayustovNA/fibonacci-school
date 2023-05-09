@@ -7,6 +7,10 @@ import { Circle } from "../ui/circle/circle";
 import { Button } from "../ui/button/button";
 import { ElementTypes } from "../../types/element-states";
 import { ElementStates } from "../../types/element-states";
+import { waitTime } from "../../utils/wait-function";
+import { DELAY_IN_MS } from "../../constants/delays";
+
+const MAX_INPUT_VALUE = 11;
 
 export const StringComponent: React.FC = () => {
 
@@ -14,11 +18,6 @@ export const StringComponent: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [loader, setLoader] = useState(false);
   const [string, setSrting] = useState<Array<ElementTypes>>();
-
-  //Время анимации
-  function setTime() {
-    return new Promise<void>((res) => setTimeout(res, 1000));
-  }
 
   //Сбор данных из формы
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,11 +29,8 @@ export const StringComponent: React.FC = () => {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let itemLine: any = inputValue.split("").map((item: string) => {
-      console.log(item)
       return { item, state: ElementStates.Default };
     });
-    console.log(itemLine)
-
     setSrting(itemLine);
     setLoader(true);
 
@@ -47,17 +43,15 @@ export const StringComponent: React.FC = () => {
         temp = itemLine[j];
         itemLine[j].state = ElementStates.Changing;
         itemLine[i].state = ElementStates.Changing;
-        // setSrting([...itemLine]);
-        await setTime();
+        await waitTime(DELAY_IN_MS);
       }
       itemLine[j] = itemLine[i];
       itemLine[i] = temp;
       itemLine[j].state = ElementStates.Modified;
       itemLine[i].state = ElementStates.Modified;
-      // await setTime();
       setSrting([...itemLine]);
     }
-    await setTime();
+    await waitTime(DELAY_IN_MS);
     itemLine[mid].state = ElementStates.Modified;
     setSrting([...itemLine]);
     setLoader(false);
@@ -69,7 +63,7 @@ export const StringComponent: React.FC = () => {
     <SolutionLayout title="Строка">
       <form className={style.form} onSubmit={onSubmit}>
         <Input
-          maxLength={11}
+          maxLength={MAX_INPUT_VALUE}
           isLimitText
           value={inputValue}
           onChange={onChange}

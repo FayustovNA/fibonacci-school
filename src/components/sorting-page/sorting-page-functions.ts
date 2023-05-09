@@ -1,25 +1,27 @@
 import { ElementStates } from "../../types/element-states";
+import { waitTime } from "../../utils/wait-function";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 export type ArrayTypes = {
     index: number;
     state: ElementStates;
 };
 
-//Время анимации
-function setTime() {
-    return new Promise<void>((res) => setTimeout(res, 500));
-}
-
 //Получение рандомного массива
 function getRandomArbitrary(min: number, max: number) {
     return Math.random() * (max - min) + min;
 }
 
+const MAX_VALUE_ARRAY = 100;
+const MIN_VALUE_ARRAY = 0;
+const MAX_LENTH_ARRAY = 18;
+const MIN_LENTH_ARRAY = 0;
+
 export function randomArr(): any {
-    const minValue = 0;
-    const maxValue = 100;
-    const minLength = 3;
-    const maxLength = 18;
+    const minValue = MIN_VALUE_ARRAY;
+    const maxValue = MAX_VALUE_ARRAY;
+    const minLength = MIN_LENTH_ARRAY;
+    const maxLength = MAX_LENTH_ARRAY;
     const arrLength = Math.round(getRandomArbitrary(minLength, maxLength));
 
     const arr = [];
@@ -40,7 +42,7 @@ export const selectionSortUp = async (array: Array<ArrayTypes>, setFunction: any
         let indexMin: any = i;
         array[indexMin].state = ElementStates.Changing;
         setFunction([...array]);
-        await setTime()
+        await waitTime(SHORT_DELAY_IN_MS)
         for (let j = i + 1; j < array.length; j++) {
             if (array[j].index < array[indexMin].index) {
                 array[j].state = ElementStates.Changing;
@@ -65,7 +67,7 @@ export const selectionSortDown = async (array: Array<ArrayTypes>, setFunction: a
         let indexMin: any = i
         array[indexMin].state = ElementStates.Changing;
         setFunction([...array]);
-        await setTime()
+        await waitTime(SHORT_DELAY_IN_MS)
         for (let j = i + 1; j < array.length; j++) {
             if (array[j].index > array[indexMin].index) {
                 array[j].state = ElementStates.Changing;
@@ -87,16 +89,13 @@ export const selectionSortDown = async (array: Array<ArrayTypes>, setFunction: a
 export const bubbleSortUp = async (array: Array<ArrayTypes>, setFunction: any, loader: any, setLoader: any) => {
     setLoader({ ...loader, up: true, down: false, new: false });
     for (let i = 0; i < array.length; i++) {
-        // array[i].state = ElementStates.Changing;
-        await setTime()
-        //console.log(array[i].index)
+        await waitTime(SHORT_DELAY_IN_MS)
         for (let j = 0; j < array.length - i - 1; j++) {
             array[j].state = ElementStates.Changing;
             array[j + 1].state = ElementStates.Changing;
             if (array[j].index > array[j + 1].index) {
-                await setTime()
+                await waitTime(SHORT_DELAY_IN_MS)
                 setFunction([...array]);
-                console.log(array[j])
                 let tmp = array[j].index
                 array[j].index = array[j + 1].index
                 array[j + 1].index = tmp
@@ -112,16 +111,13 @@ export const bubbleSortUp = async (array: Array<ArrayTypes>, setFunction: any, l
 export const bubbleSortDown = async (array: Array<ArrayTypes>, setFunction: any, loader: any, setLoader: any) => {
     setLoader({ ...loader, up: false, down: true, new: false });
     for (let i = 0; i < array.length; i++) {
-        // array[i].state = ElementStates.Changing;
-        await setTime()
-        //console.log(array[i].index)
+        await waitTime(SHORT_DELAY_IN_MS)
         for (let j = 0; j < array.length - i - 1; j++) {
             array[j].state = ElementStates.Changing;
             array[j + 1].state = ElementStates.Changing;
             if (array[j].index < array[j + 1].index) {
-                await setTime()
+                await waitTime(SHORT_DELAY_IN_MS)
                 setFunction([...array]);
-                console.log(array[j])
                 let tmp = array[j].index
                 array[j].index = array[j + 1].index
                 array[j + 1].index = tmp
