@@ -1,0 +1,20 @@
+.form {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 522px;
+    justify-content: center;
+    margin: auto;
+    padding: 0;
+}
+
+.line {
+    display: flex;
+    flex-direction: row;
+    max-width: 944px;
+    /* justify-content: center; */
+    flex-wrap: wrap;
+    row-gap: 60px;
+    column-gap: 15px;
+    margin: 50px auto auto auto;
+}

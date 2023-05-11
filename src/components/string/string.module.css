@@ -1,0 +1,17 @@
+.form {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 522px;
+    justify-content: center;
+    margin: auto;
+    padding: 0;
+}
+
+.line {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    justify-content: center;
+    margin: 50px auto auto auto;
+}
