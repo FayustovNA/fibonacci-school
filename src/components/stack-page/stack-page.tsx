@@ -46,7 +46,7 @@ export const StackPage: React.FC = () => {
   //Удаление из стека
   const popStack = async () => {
     setLoader({ ...loader, delete: true })
-    setIsActive(stacks.getTop());
+    setIsActive(stacks.getTop()-1);
     await waitTime(DELAY_IN_MS);
     stacks.pop();
     setStack([...stacks.getElements()])

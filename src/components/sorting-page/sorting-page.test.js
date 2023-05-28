@@ -20,8 +20,6 @@ describe('selectionSortUpTest', () => {
     });
 
   });
-
-
   describe('selectionSortDownTest', () => {
 
     it('should correctly sort an empty array', async () => {
@@ -40,7 +38,6 @@ describe('selectionSortUpTest', () => {
 
 
 
-  
   describe('bubbleSortUpTest', () => {
 
     it('should correctly sort an empty array', async () => {
@@ -56,7 +53,6 @@ describe('selectionSortUpTest', () => {
     });
 
   });
-
   describe('bubbleSortDownTest', () => {
 
     it('should correctly sort an empty array', async () => {
