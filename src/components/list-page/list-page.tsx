@@ -165,6 +165,8 @@ export const ListPage: React.FC = () => {
     }
 
     linkedList.findElement(Number(inputValue.index))!.value = '';
+
+    await waitTime(SHORT_DELAY_IN_MS);
     setIsActiveIndexDelete(Number(inputValue.index));
 
     await waitTime(SHORT_DELAY_IN_MS);

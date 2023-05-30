@@ -1,4 +1,4 @@
-import { CHANGING, DEFAULT, circle, circleContent, circleLine } from "../constans";
+import { CHANGING, DEFAULT, circle, circleContent } from "../constans";
 
 
 describe("Stack Component", () => {
@@ -61,7 +61,6 @@ describe("Stack Component", () => {
 
         cy.get("Input").should("have.value", "");
         })
-
 
 
     it('should delete item from the stack correctly', () => {

@@ -1,4 +1,5 @@
 // css.circle
+export const circleSmall = "[class*=circle_small]";
 export const circle = '[class*=circle_circle]';
 export const circleContent = '[class*=circle_content]';
 export const circleLine= '[class*=stack-page_line]';
