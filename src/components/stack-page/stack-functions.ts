@@ -2,6 +2,7 @@ interface IStack<T> {
     push?: (item: T) => void;
     pop?: () => void;
     peak: () => T | null;
+    isEmpty?: () => void;
 }
 
 export class Stack<T> implements IStack<T> {
@@ -25,6 +26,7 @@ export class Stack<T> implements IStack<T> {
         if (this.container.length > 0) {
             this.container.pop();
             this.top--;
+            this.length--;
         }
     }
 
@@ -38,6 +40,7 @@ export class Stack<T> implements IStack<T> {
     cleanStack = () => {
         this.container = [];
         this.top = 0;
+        this.length = 0;
     };
 
     getElements = () => this.container;
@@ -45,6 +48,7 @@ export class Stack<T> implements IStack<T> {
 
     isFull = () => this.length === this.size;
     isEmpty = () => this.length === 0;
+    isLength = () => this.length;
 }
 
 

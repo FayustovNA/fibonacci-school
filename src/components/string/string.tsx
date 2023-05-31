@@ -33,12 +33,8 @@ export const StringComponent: React.FC = () => {
     let itemLine: any = inputValue.split("").map((item: string) => {
       return { item, state: ElementStates.Default };
     });
-
     setSrting(itemLine);
-    setLoader(true);
-
     reverseString(inputValue, setSrting, setLoader)
-    setLoader(false);
     setInputValue("");
   };
 
