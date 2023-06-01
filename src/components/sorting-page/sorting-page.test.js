@@ -16,11 +16,11 @@ describe('selectionSortUpTest', () => {
     });
 
     it('should correctly sort an array with multiple elements', async () => {
-        expect(await selectionSortUpTest([5, 4, 3, 2, 1])).toEqual([1,2,3,4,5])
+        expect(await selectionSortUpTest([5, 4, 3, 2, 1])).toEqual([1, 2, 3, 4, 5])
     });
 
-  });
-  describe('selectionSortDownTest', () => {
+});
+describe('selectionSortDownTest', () => {
 
     it('should correctly sort an empty array', async () => {
         expect(await selectionSortDownTest([])).toEqual([])
@@ -31,14 +31,14 @@ describe('selectionSortUpTest', () => {
     });
 
     it('should correctly sort an array with multiple elements', async () => {
-        expect(await selectionSortDownTest([1, 2, 3, 4, 5])).toEqual([5,4,3,2,1])
+        expect(await selectionSortDownTest([1, 2, 3, 4, 5])).toEqual([5, 4, 3, 2, 1])
     });
 
-  });
+});
 
 
 
-  describe('bubbleSortUpTest', () => {
+describe('bubbleSortUpTest', () => {
 
     it('should correctly sort an empty array', async () => {
         expect(await bubbleSortUpTest([])).toEqual([])
@@ -49,11 +49,11 @@ describe('selectionSortUpTest', () => {
     });
 
     it('should correctly sort an array with multiple elements', async () => {
-        expect(await bubbleSortUpTest([5, 4, 3, 2, 1])).toEqual([1,2,3,4,5])
+        expect(await bubbleSortUpTest([5, 4, 3, 2, 1])).toEqual([1, 2, 3, 4, 5])
     });
 
-  });
-  describe('bubbleSortDownTest', () => {
+});
+describe('bubbleSortDownTest', () => {
 
     it('should correctly sort an empty array', async () => {
         expect(await bubbleSortDownTest([])).toEqual([])
@@ -64,8 +64,8 @@ describe('selectionSortUpTest', () => {
     });
 
     it('should correctly sort an array with multiple elements', async () => {
-        expect(await bubbleSortDownTest([1, 2, 3, 4, 5])).toEqual([5,4,3,2,1])
+        expect(await bubbleSortDownTest([1, 2, 3, 4, 5])).toEqual([5, 4, 3, 2, 1])
     });
 
-  });
+});
 

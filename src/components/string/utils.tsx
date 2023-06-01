@@ -10,7 +10,8 @@ export const reverseString = async (str: string, setSrting?: any, setLoader?: an
   if (str!) {
     let temp: any = null;
     const mid = Math.floor((itemLine.length) / 2);
-    setLoader(true)
+    if (setLoader) { setLoader(true) }
+
     for (var i = 0, j = itemLine.length - 1; i < j; i++, j--) {
 
       if (i !== j) {
@@ -30,9 +31,9 @@ export const reverseString = async (str: string, setSrting?: any, setLoader?: an
     itemLine[mid].state = ElementStates.Modified;
 
     if (setSrting) { setSrting([...itemLine]); }
-    setLoader(false)
+    if (setLoader) { setLoader(false) }
     return itemLine
   }
-  setLoader(false)
+  if (setLoader) { setLoader(false) }
   return []
 }

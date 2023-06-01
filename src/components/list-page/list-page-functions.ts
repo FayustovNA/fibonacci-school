@@ -212,7 +212,7 @@ function getRandomArbitrary(min: number, max: number) {
 export function randomArr(): any {
     const minValue = 0;
     const maxValue = 100;
-    const minLength = 1;
+    const minLength = 3;
     const maxLength = 5;
     const arrLength = Math.round(getRandomArbitrary(minLength, maxLength));
 
