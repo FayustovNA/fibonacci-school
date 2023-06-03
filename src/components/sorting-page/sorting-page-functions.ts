@@ -35,13 +35,13 @@ export function randomArr(): any {
 }
 
 //Сортировка "Выбор"
-export const selectionSortUp = async (array: Array<ArrayTypes>, setFunction: any, loader: any, setLoader: any) => {
+export const selectionSortUp = async (array: Array<ArrayTypes>, setFunction?: any, loader?: any, setLoader?: any) => {
     // let count = 0;
-    setLoader({ ...loader, up: true, down: false, new: false });
+    if (setLoader) {setLoader({ ...loader, up: true, down: false, new: false });}
     for (let i = 0; i < array.length; i++) {
         let indexMin: any = i;
         array[indexMin].state = ElementStates.Changing;
-        setFunction([...array]);
+        if (setFunction) {setFunction([...array]);}
         await waitTime(SHORT_DELAY_IN_MS)
         for (let j = i + 1; j < array.length; j++) {
             if (array[j].index < array[indexMin].index) {
@@ -56,17 +56,35 @@ export const selectionSortUp = async (array: Array<ArrayTypes>, setFunction: any
         array[indexMin].state = ElementStates.Default;
         array[i].state = ElementStates.Modified;
     }
-    setFunction([...array]);
-    setLoader({ ...loader, up: false, down: false, new: false });
+    if (setFunction) {setFunction([...array]);}
+    if (setLoader) {setLoader({ ...loader, up: false, down: false, new: false });}
+   console.log(array)
+    return array
+}
+export const selectionSortUpTest = async (array: Array<ArrayTypes>) => {
+    for (let i = 0; i < array.length; i++) {
+        let indexMin: any = i;
+        for (let j = i + 1; j < array.length; j++) {
+            if (array[j] < array[indexMin]) {
+                indexMin = j
+            }
+        }
+        let tmp: any = array[i]
+        array[i] = array[indexMin]
+        array[indexMin] = tmp
+    }
+    return array
 }
 
-export const selectionSortDown = async (array: Array<ArrayTypes>, setFunction: any, loader: any, setLoader: any) => {
+
+export const selectionSortDown = async (array: Array<ArrayTypes>, setFunction?: any, loader?: any, setLoader?: any) => {
     // let count = 0;
-    setLoader({ ...loader, up: false, down: true, new: false });
+    if (setLoader) {setLoader({ ...loader, up: false, down: true, new: false });}
+    
     for (let i = 0; i < array.length; i++) {
         let indexMin: any = i
         array[indexMin].state = ElementStates.Changing;
-        setFunction([...array]);
+        if (setFunction) {setFunction([...array]);}
         await waitTime(SHORT_DELAY_IN_MS)
         for (let j = i + 1; j < array.length; j++) {
             if (array[j].index > array[indexMin].index) {
@@ -81,8 +99,24 @@ export const selectionSortDown = async (array: Array<ArrayTypes>, setFunction: a
         array[indexMin].state = ElementStates.Default;
         array[i].state = ElementStates.Modified;
     }
-    setFunction([...array]);
-    setLoader({ ...loader, up: false, down: false, new: false });
+    if (setFunction) {setFunction([...array]);}
+    if (setLoader) {setLoader({ ...loader, up: false, down: false, new: false });}
+    return array
+}
+export const selectionSortDownTest = async (array: Array<ArrayTypes>) => {
+    for (let i = 0; i < array.length; i++) {
+        let indexMin: any = i
+        await waitTime(SHORT_DELAY_IN_MS)
+        for (let j = i + 1; j < array.length; j++) {
+            if (array[j] > array[indexMin]) {
+                indexMin = j
+            }
+        }
+        let tmp: any = array[i]
+        array[i] = array[indexMin]
+        array[indexMin] = tmp
+    }
+    return array
 }
 
 //Сортировка "Пузырек"
@@ -107,6 +141,18 @@ export const bubbleSortUp = async (array: Array<ArrayTypes>, setFunction: any, l
     setFunction([...array]);
     setLoader({ ...loader, up: false, down: false, new: false });
 }
+export const bubbleSortUpTest = async (array: Array<ArrayTypes>) => {
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array.length - i - 1; j++) {
+            if (array[j] > array[j + 1]) {
+                let tmp = array[j]
+                array[j] = array[j + 1]
+                array[j + 1] = tmp
+            }
+        }
+    }
+ return array
+}
 
 export const bubbleSortDown = async (array: Array<ArrayTypes>, setFunction: any, loader: any, setLoader: any) => {
     setLoader({ ...loader, up: false, down: true, new: false });
@@ -128,4 +174,16 @@ export const bubbleSortDown = async (array: Array<ArrayTypes>, setFunction: any,
     }
     setFunction([...array]);
     setLoader({ ...loader, up: false, down: false, new: false });
+}
+export const bubbleSortDownTest = async (array: Array<ArrayTypes>) => {
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array.length - i - 1; j++) {
+            if (array[j] < array[j + 1]) {
+                let tmp = array[j]
+                array[j] = array[j + 1]
+                array[j + 1] = tmp
+            }
+        }
+    }
+    return array
 }

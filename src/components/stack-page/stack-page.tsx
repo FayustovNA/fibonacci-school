@@ -24,6 +24,7 @@ export const StackPage: React.FC = () => {
   const [stack, setStack] = useState<Array<any>>();
   const [isActive, setIsActive] = useState<any>(null);
 
+
   //Сбор данных из формы
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement
@@ -46,7 +47,7 @@ export const StackPage: React.FC = () => {
   //Удаление из стека
   const popStack = async () => {
     setLoader({ ...loader, delete: true })
-    setIsActive(stacks.getTop());
+    setIsActive(stacks.getTop() - 1);
     await waitTime(DELAY_IN_MS);
     stacks.pop();
     setStack([...stacks.getElements()])
@@ -65,6 +66,9 @@ export const StackPage: React.FC = () => {
     setIsActive('false')
     setLoader({ ...loader, reset: false })
   }
+
+  console.log(stacks.isEmpty())
+  console.log(stacks.isLength())
 
   return (
     <SolutionLayout title="Стек">
@@ -99,7 +103,7 @@ export const StackPage: React.FC = () => {
           type={'reset'}
           isLoader={loader.reset}
           onClick={cleanStack}
-          disabled={stacks.isEmpty() || loader.push || loader.delete}
+          disabled={stacks.isEmpty() || loader.push || loader.delete || stacks.isLength() === 0}
         />
       </div>
       <ul className={style.line}>
